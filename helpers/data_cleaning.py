@@ -2,6 +2,22 @@ import pandas as pd
 from pandas import DataFrame
 from utils.data_processing import normalize_text
 
+
+def remove_constant_columns(df, verbose=True):
+
+    df_copy = df.copy()
+
+    for col in df_copy.select_dtypes(exclude=['number']).columns:
+        n_unique = df_copy[col].nunique()
+        
+        if n_unique == 1:
+            df_copy.drop(columns=col)
+            if verbose: print(f'{col} : {n_unique} valores únicos - DROPADA')
+        else: 
+            if verbose: print(f'{col} : {n_unique} valores únicos')
+
+    return df_copy
+
 def df_to_lowercase(df: pd.DataFrame()) -> pd.DataFrame():
     ''' Padroniza todos as strings das colunas textuais de um dataframe para lowercase
         
